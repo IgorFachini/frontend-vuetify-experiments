@@ -18,7 +18,7 @@
             <template #prepend>
               <v-icon>mdi-logout</v-icon>
             </template>
-            <v-list-item-title>Logout</v-list-item-title>
+            <v-list-item-title>{{ t('layout.logout') }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -34,7 +34,7 @@
     >
       <v-list-item
         prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
-        :title="authStore.user?.email || 'User'"
+        :title="authStore.user?.email || t('layout.user')"
       >
         <template #append>
           <v-btn
@@ -50,13 +50,13 @@
       <v-list density="compact" nav>
         <v-list-item
           prepend-icon="mdi-home"
-          title="Home"
+          :title="t('layout.home')"
           to="/home"
           value="home"
         />
         <v-list-item
           prepend-icon="mdi-video"
-          title="Videos"
+          :title="t('layout.videos')"
           to="/pandavideo"
           value="videos"
         />
@@ -72,12 +72,14 @@
 
 <script lang="ts" setup>
   import { computed, ref } from 'vue'
+  import { useI18n } from 'vue-i18n'
   import { useRoute, useRouter } from 'vue-router'
   import { useAuthStore } from '@/stores/auth'
 
   const route = useRoute()
   const router = useRouter()
   const authStore = useAuthStore()
+  const { t } = useI18n()
 
   const drawer = ref(true)
   const rail = ref(false)

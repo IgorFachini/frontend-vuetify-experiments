@@ -3,13 +3,13 @@
     <v-row>
       <v-col cols="12">
         <div class="d-flex align-center justify-space-between mb-6">
-          <h1 class="text-h4">Videos</h1>
+          <h1 class="text-h4">{{ t('pandavideo.title') }}</h1>
           <v-btn
             color="primary"
             prepend-icon="mdi-video-plus"
             @click="showUploadDialog = true"
           >
-            Upload Video
+            {{ t('pandavideo.uploadButton') }}
           </v-btn>
         </div>
       </v-col>
@@ -67,28 +67,28 @@
           icon="mdi-video-off"
           size="64"
         />
-        <div class="text-h6 text-grey">No videos found</div>
+        <div class="text-h6 text-grey">{{ t('pandavideo.noVideos') }}</div>
       </v-col>
     </v-row>
 
     <!-- Upload Dialog -->
     <v-dialog v-model="showUploadDialog" max-width="500">
       <v-card>
-        <v-card-title>Upload Video</v-card-title>
+        <v-card-title>{{ t('pandavideo.uploadTitle') }}</v-card-title>
         <v-card-text>
           <v-form ref="uploadForm" @submit.prevent="handleUpload">
             <v-text-field
               v-model="newVideo.title"
               class="mb-4"
-              label="Title"
+              :label="t('pandavideo.videoTitle')"
               required
-              :rules="[v => !!v || 'Title is required']"
+              :rules="[v => !!v || t('pandavideo.titleRequired')]"
             />
 
             <v-textarea
               v-model="newVideo.description"
               class="mb-4"
-              label="Description"
+              :label="t('pandavideo.description')"
               rows="3"
             />
 
@@ -96,9 +96,9 @@
               v-model="newVideo.file"
               accept="video/*"
               class="mb-4"
-              label="Video File"
+              :label="t('pandavideo.videoFile')"
               required
-              :rules="[v => !!v || 'Video file is required']"
+              :rules="[v => !!v || t('pandavideo.fileRequired')]"
             />
           </v-form>
         </v-card-text>
@@ -109,14 +109,14 @@
             text
             @click="showUploadDialog = false"
           >
-            Cancel
+            {{ t('common.cancel') }}
           </v-btn>
           <v-btn
             color="primary"
             :loading="uploading"
             @click="handleUpload"
           >
-            Upload
+            {{ t('common.upload') }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -126,8 +126,10 @@
 
 <script setup lang="ts">
   import { onMounted, ref } from 'vue'
+  import { useI18n } from 'vue-i18n'
   import { PandaVideoService } from '@/services/pandavideo.service'
 
+  const { t } = useI18n()
   const videos = ref([])
   const showUploadDialog = ref(false)
   const uploadForm = ref()

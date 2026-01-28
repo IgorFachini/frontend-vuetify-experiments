@@ -1,70 +1,114 @@
 <template>
   <v-footer
     app
-    height="40"
+    class="d-flex flex-column flex-sm-row align-center justify-space-between px-4 py-2"
+    height="auto"
   >
-    <a
-      v-for="item in items"
-      :key="item.title"
-      class="d-inline-block mx-2 social-link"
-      :href="item.href"
-      rel="noopener noreferrer"
-      target="_blank"
-      :title="item.title"
-    >
-      <v-icon
-        :icon="item.icon"
-        :size="item.icon === '$vuetify' ? 24 : 16"
-      />
-    </a>
-
-    <div
-      class="text-caption text-disabled"
-      style="position: absolute; right: 16px;"
-    >
-      &copy; 2016-{{ (new Date()).getFullYear() }} <span class="d-none d-sm-inline-block">Vuetify, LLC</span>
-      —
+    <!-- Social Links -->
+    <div class="d-flex align-center mb-2 mb-sm-0">
       <a
-        class="text-decoration-none on-surface"
-        href="https://vuetifyjs.com/about/licensing/"
+        v-for="item in items"
+        :key="item.title"
+        class="d-inline-block mx-2 social-link"
+        :href="item.href"
         rel="noopener noreferrer"
         target="_blank"
+        :title="t(item.title)"
       >
-        MIT License
+        <v-icon
+          :icon="item.icon"
+          :size="item.icon === '$vuetify' ? 24 : 16"
+        />
       </a>
+    </div>
+
+    <!-- Right Side: Copyright & Language -->
+    <div class="d-flex align-center flex-wrap justify-center gap-4">
+      <div class="text-caption text-disabled mr-4">
+        &copy; 2016-{{ (new Date()).getFullYear() }} <span class="d-none d-sm-inline-block">{{ t('footer.copyright') }}</span>
+        —
+        <a
+          class="text-decoration-none on-surface"
+          href="https://vuetifyjs.com/about/licensing/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          {{ t('footer.license') }}
+        </a>
+      </div>
+
+      <!-- Language Switcher -->
+      <v-menu location="top">
+        <template #activator="{ props }">
+          <v-btn
+            class="text-caption"
+            density="comfortable"
+            prepend-icon="mdi-translate"
+            size="small"
+            variant="text"
+            v-bind="props"
+          >
+            {{ currentLanguageLabel }}
+          </v-btn>
+        </template>
+        <v-list density="compact">
+          <v-list-item
+            v-for="lang in availableLocales"
+            :key="lang.value"
+            :active="locale === lang.value"
+            @click="locale = lang.value"
+          >
+            <v-list-item-title>{{ lang.label }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </div>
   </v-footer>
 </template>
 
 <script setup lang="ts">
+  import { computed } from 'vue'
+  import { useI18n } from 'vue-i18n'
+
+  const { t, locale } = useI18n()
+
+  const availableLocales = computed(() => [
+    { value: 'en', label: t('footer.en') },
+    { value: 'pt', label: t('footer.pt') },
+  ])
+
+  const currentLanguageLabel = computed(() => {
+    return availableLocales.value.find(l => l.value === locale.value)?.label || t('footer.language')
+  })
+
   const items = [
     {
-      title: 'Vuetify Documentation',
+      title: 'footer.docs',
       icon: `$vuetify`,
       href: 'https://vuetifyjs.com/',
     },
     {
-      title: 'Vuetify Support',
+      title: 'footer.support',
       icon: 'mdi-shield-star-outline',
       href: 'https://support.vuetifyjs.com/',
     },
     {
-      title: 'Vuetify X',
+      title: 'footer.x',
       icon: ['M2.04875 3.00002L9.77052 13.3248L1.99998 21.7192H3.74882L10.5519 14.3697L16.0486 21.7192H22L13.8437 10.8137L21.0765 3.00002H19.3277L13.0624 9.76874L8.0001 3.00002H2.04875ZM4.62054 4.28821H7.35461L19.4278 20.4308H16.6937L4.62054 4.28821Z'],
       href: 'https://x.com/vuetifyjs',
     },
     {
-      title: 'Vuetify GitHub',
+      title: 'footer.github',
       icon: `mdi-github`,
       href: 'https://github.com/vuetifyjs/vuetify',
     },
     {
-      title: 'Vuetify Discord',
+      title: 'footer.discord',
       icon: ['M22,24L16.75,19L17.38,21H4.5A2.5,2.5 0 0,1 2,18.5V3.5A2.5,2.5 0 0,1 4.5,1H19.5A2.5,2.5 0 0,1 22,3.5V24M12,6.8C9.32,6.8 7.44,7.95 7.44,7.95C8.47,7.03 10.27,6.5 10.27,6.5L10.1,6.33C8.41,6.36 6.88,7.53 6.88,7.53C5.16,11.12 5.27,14.22 5.27,14.22C6.67,16.03 8.75,15.9 8.75,15.9L9.46,15C8.21,14.73 7.42,13.62 7.42,13.62C7.42,13.62 9.3,14.9 12,14.9C14.7,14.9 16.58,13.62 16.58,13.62C16.58,13.62 15.79,14.73 14.54,15L15.25,15.9C15.25,15.9 17.33,16.03 18.73,14.22C18.73,14.22 18.84,11.12 17.12,7.53C17.12,7.53 15.59,6.36 13.9,6.33L13.73,6.5C13.73,6.5 15.53,7.03 16.56,7.95C16.56,7.95 14.68,6.8 12,6.8M9.93,10.59C10.58,10.59 11.11,11.16 11.1,11.86C11.1,12.55 10.58,13.13 9.93,13.13C9.29,13.13 8.77,12.55 8.77,11.86C8.77,11.16 9.28,10.59 9.93,10.59M14.1,10.59C14.75,10.59 15.27,11.16 15.27,11.86C15.27,12.55 14.75,13.13 14.1,13.13C13.46,13.13 12.94,12.55 12.94,11.86C12.94,11.16 13.45,10.59 14.1,10.59Z'],
       href: 'https://community.vuetifyjs.com/',
     },
     {
-      title: 'Vuetify Reddit',
+      title: 'footer.reddit',
       icon: `mdi-reddit`,
       href: 'https://reddit.com/r/vuetifyjs',
     },
@@ -79,4 +123,7 @@
 
     &:hover
       color: rgba(25, 118, 210, 1)
+
+  .gap-4
+    gap: 16px
 </style>

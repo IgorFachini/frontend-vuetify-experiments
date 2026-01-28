@@ -12,6 +12,7 @@ import pinia from '../stores'
 import { setLogoutCallback } from './axios'
 
 // Plugins
+import i18n from './i18n'
 import vuetify from './vuetify'
 
 export function registerPlugins (app: App) {
@@ -19,6 +20,7 @@ export function registerPlugins (app: App) {
     .use(vuetify)
     .use(router)
     .use(pinia)
+    .use(i18n)
 
   // Configure auth callback after plugins are initialized
   const authStore = useAuthStore()
