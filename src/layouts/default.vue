@@ -2,11 +2,11 @@
   <v-app>
     <!-- Header -->
     <v-app-bar elevation="1">
-      <v-app-bar-nav-icon v-if="!isLoginPage" @click="drawer = !drawer" />
+      <v-app-bar-nav-icon @click="drawer = !drawer" />
 
       <v-spacer />
 
-      <v-menu v-if="!isLoginPage">
+      <v-menu>
         <template #activator="{ props }">
           <v-btn icon v-bind="props">
             <v-icon>mdi-account-circle</v-icon>
@@ -24,9 +24,8 @@
       </v-menu>
     </v-app-bar>
 
-    <!-- Sidebar - Hide on login page -->
+    <!-- Sidebar -->
     <v-navigation-drawer
-      v-if="!isLoginPage"
       v-model="drawer"
       permanent
       :rail="rail"
@@ -71,20 +70,17 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, ref } from 'vue'
+  import { ref } from 'vue'
   import { useI18n } from 'vue-i18n'
-  import { useRoute, useRouter } from 'vue-router'
+  import { useRouter } from 'vue-router'
   import { useAuthStore } from '@/stores/auth'
 
-  const route = useRoute()
   const router = useRouter()
   const authStore = useAuthStore()
   const { t } = useI18n()
 
   const drawer = ref(true)
   const rail = ref(false)
-
-  const isLoginPage = computed(() => route.path === '/login')
 
   const handleLogout = async () => {
     await authStore.logout()

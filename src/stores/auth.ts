@@ -38,6 +38,25 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
+    async register (payload: { name: string, email: string, password: string }) {
+      this.loading = true
+      try {
+        const response = await AuthService.signup(payload)
+
+        // Auto-login logic
+        localStorage.setItem('app_token', response.access_token)
+        localStorage.setItem('app_refresh_token', response.refresh_token)
+        localStorage.setItem('app_token_expiry', (Date.now() + response.expires_in * 1000).toString())
+
+        this.isAuthenticated = true
+        this.user = response.user || null
+
+        return response
+      } finally {
+        this.loading = false
+      }
+    },
+
     async logout () {
       this.loading = true
       try {

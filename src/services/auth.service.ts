@@ -18,11 +18,16 @@ export interface AuthResponse {
 export interface SignupPayload {
   email: string
   password: string
+  name: string
 }
 
 export interface SignupResponse {
-  id: number
-  email: string
+  access_token: string
+  token_type: string
+  refresh_token: string
+  expires_in: number
+  refresh_expires_in: number
+  user?: { id: number, email: string, name?: string }
 }
 
 export interface UserResponse {
@@ -36,8 +41,8 @@ export const AuthService = {
     return response.data
   },
 
-  async signup (payload: SignupPayload): Promise<SignupResponse> {
-    const response: AxiosResponse<SignupResponse> = await api.post('/users/register', payload)
+  async signup (payload: SignupPayload): Promise<AuthResponse> {
+    const response: AxiosResponse<AuthResponse> = await api.post('/users/register', payload)
     return response.data
   },
 

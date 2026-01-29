@@ -66,6 +66,12 @@
           <div v-if="errorMessage" class="error-message mt-4 text-center text-red">
             {{ errorMessage }}
           </div>
+
+          <div class="text-center mt-4">
+            <router-link class="text-decoration-none text-primary" to="/register">
+              {{ t('login.createAccount') }}
+            </router-link>
+          </div>
         </v-card-text>
       </v-card>
     </div>
