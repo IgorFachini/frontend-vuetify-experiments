@@ -56,7 +56,7 @@
             v-for="lang in availableLocales"
             :key="lang.value"
             :active="locale === lang.value"
-            @click="locale = lang.value"
+            @click="setLocale(lang.value)"
           >
             <v-list-item-title>{{ lang.label }}</v-list-item-title>
           </v-list-item>
@@ -71,6 +71,11 @@
   import { useI18n } from 'vue-i18n'
 
   const { t, locale } = useI18n()
+
+  const setLocale = (newLocale: string) => {
+    locale.value = newLocale
+    localStorage.setItem('user_locale', newLocale)
+  }
 
   const availableLocales = computed(() => [
     { value: 'en', label: t('footer.en') },

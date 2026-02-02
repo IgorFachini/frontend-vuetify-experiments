@@ -34,7 +34,7 @@ export const routes: RouteRecordRaw[] = [
     component: () => import('@/pages/index.vue'),
     meta: {
       layout: 'default',
-      requiresAuth: true,
+      requiresAuth: false,
     },
   },
   {

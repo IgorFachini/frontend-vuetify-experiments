@@ -6,22 +6,27 @@
 
       <v-spacer />
 
-      <v-menu>
-        <template #activator="{ props }">
-          <v-btn icon v-bind="props">
-            <v-icon>mdi-account-circle</v-icon>
-          </v-btn>
-        </template>
+      <template v-if="authStore.isAuthenticated">
+        <v-menu>
+          <template #activator="{ props }">
+            <v-btn icon v-bind="props">
+              <v-icon>mdi-account-circle</v-icon>
+            </v-btn>
+          </template>
 
-        <v-list>
-          <v-list-item @click="handleLogout">
-            <template #prepend>
-              <v-icon>mdi-logout</v-icon>
-            </template>
-            <v-list-item-title>{{ t('layout.logout') }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
+          <v-list>
+            <v-list-item @click="handleLogout">
+              <template #prepend>
+                <v-icon>mdi-logout</v-icon>
+              </template>
+              <v-list-item-title>{{ t('layout.logout') }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </template>
+      <template v-else>
+        <v-btn to="/login" variant="text">Login</v-btn>
+      </template>
     </v-app-bar>
 
     <!-- Sidebar -->
@@ -32,7 +37,7 @@
       @click="rail = false"
     >
       <v-list-item
-        prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
+        v-if="authStore.isAuthenticated"
         :title="authStore.user?.email || t('layout.user')"
       >
         <template #append>
@@ -54,6 +59,7 @@
           value="home"
         />
         <v-list-item
+          v-if="authStore.isAuthenticated"
           prepend-icon="mdi-video"
           :title="t('layout.videos')"
           to="/pandavideo"

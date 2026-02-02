@@ -7,9 +7,31 @@ const messages = {
   pt,
 }
 
+function getBrowserLocale (options: string[]): string | undefined {
+  const defaultLocale = 'en'
+
+  // Check localStorage first
+  const storedLocale = localStorage.getItem('user_locale')
+  if (storedLocale && options.includes(storedLocale)) {
+    return storedLocale
+  }
+
+  // Check browser language
+  if (typeof navigator !== 'undefined') {
+    const browserLocale = navigator.language.split('-')[0]
+    if (options.includes(browserLocale)) {
+      return browserLocale
+    }
+  }
+
+  return defaultLocale
+}
+
+const startingLocale = getBrowserLocale(Object.keys(messages))
+
 const i18n = createI18n({
   legacy: false, // Use Composition API
-  locale: 'en',
+  locale: startingLocale,
   fallbackLocale: 'en',
   messages,
 })
